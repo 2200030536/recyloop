@@ -84,6 +84,10 @@ const ProfilePage = () => {
             
             <div className="page-header" style={{ marginBottom: '20px' }}>
                 <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                        <img src="/logo.png" alt="Recyloop Logo" style={{ height: '24px', objectFit: 'contain' }} />
+                        <span style={{ fontWeight: '800', fontSize: '1.1rem', color: '#fff', letterSpacing: '0.5px' }}>Recyloop</span>
+                    </div>
                     <button className="btn-icon" onClick={() => navigate(-1)} style={{ marginBottom: '10px' }} title="Go Back">
                         <FiArrowLeft />
                     </button>

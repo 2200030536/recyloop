@@ -25,6 +25,10 @@ const AdminDashboard = () => {
 
             <div className="page-header">
                 <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                        <img src="/logo.png" alt="Recyloop Logo" style={{ height: '24px', objectFit: 'contain' }} />
+                        <span style={{ fontWeight: '800', fontSize: '1.1rem', color: '#fff', letterSpacing: '0.5px' }}>Recyloop</span>
+                    </div>
                     <h1 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <FiZap style={{ color: 'var(--accent)' }} />
                         Admin Dashboard
