@@ -2,6 +2,8 @@ import React, { useContext } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
+import { ThemeProvider } from './context/ThemeContext';
+import ThemeToggle from './components/ThemeToggle';
 
 // Auth Pages
 import LoginPage from './pages/Auth/LoginPage';
@@ -40,92 +42,117 @@ import CreateCityAdmin from './pages/Admin/CreateCityAdmin';
 import ProfilePage from './pages/Profile/ProfilePage';
 
 const AppRoutes = () => {
+    // Persistent floating theme toggle rendered on top of all routes
     const { user, isLoading } = useContext(AuthContext);
+
+    const floatingToggle = (
+        <div className="theme-fab">
+            <ThemeToggle />
+        </div>
+    );
 
     if (isLoading) {
         return (
             <div className="spinner-container">
                 <div className="spinner"></div>
+                {floatingToggle}
             </div>
         );
     }
 
     if (!user) {
         return (
-            <Routes>
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/signup" element={<VendorSignupPage />} />
-                <Route path="*" element={<Navigate to="/login" replace />} />
-            </Routes>
+            <>
+                <Routes>
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/signup" element={<VendorSignupPage />} />
+                    <Route path="*" element={<Navigate to="/login" replace />} />
+                </Routes>
+                {floatingToggle}
+            </>
         );
     }
 
     if (user.role === 'admin') {
         return (
-            <Routes>
-                <Route path="/" element={<AdminDashboard />} />
-                <Route path="/vendor-approval" element={<VendorApproval />} />
-                <Route path="/products" element={<ProductManagement />} />
-                <Route path="/cities" element={<CityManagement />} />
-                <Route path="/users" element={<UserManagement />} />
-                <Route path="/city-admins" element={<CityAdminManagement />} />
-                <Route path="/create-city-admin" element={<CreateCityAdmin />} />
-                <Route path="/rates" element={<RateUpdate />} />
-                <Route path="/vendor-supply" element={<VendorSupplyList />} />
-                <Route path="/recycler-demand" element={<RecyclerDemandList />} />
-                <Route path="/create-recycler" element={<CreateRecycler />} />
-                <Route path="/profile" element={<ProfilePage />} />
-                <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
+            <>
+                <Routes>
+                    <Route path="/" element={<AdminDashboard />} />
+                    <Route path="/vendor-approval" element={<VendorApproval />} />
+                    <Route path="/products" element={<ProductManagement />} />
+                    <Route path="/cities" element={<CityManagement />} />
+                    <Route path="/users" element={<UserManagement />} />
+                    <Route path="/city-admins" element={<CityAdminManagement />} />
+                    <Route path="/create-city-admin" element={<CreateCityAdmin />} />
+                    <Route path="/rates" element={<RateUpdate />} />
+                    <Route path="/vendor-supply" element={<VendorSupplyList />} />
+                    <Route path="/recycler-demand" element={<RecyclerDemandList />} />
+                    <Route path="/create-recycler" element={<CreateRecycler />} />
+                    <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+                {floatingToggle}
+            </>
         );
     }
 
     if (user.role === 'city_admin') {
         return (
-            <Routes>
-                <Route path="/" element={<CityAdminDashboard />} />
-                <Route path="/city-vendors" element={<CityAdminVendorList />} />
-                <Route path="/city-recyclers" element={<CityAdminRecyclerList />} />
-                <Route path="/city-supply" element={<CityAdminVendorSupplyList />} />
-                <Route path="/city-demand" element={<CityAdminRecyclerDemandList />} />
-                <Route path="/city-rates" element={<CityAdminRateUpdate />} />
-                <Route path="/profile" element={<ProfilePage />} />
-                <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
+            <>
+                <Routes>
+                    <Route path="/" element={<CityAdminDashboard />} />
+                    <Route path="/city-vendors" element={<CityAdminVendorList />} />
+                    <Route path="/city-recyclers" element={<CityAdminRecyclerList />} />
+                    <Route path="/city-supply" element={<CityAdminVendorSupplyList />} />
+                    <Route path="/city-demand" element={<CityAdminRecyclerDemandList />} />
+                    <Route path="/city-rates" element={<CityAdminRateUpdate />} />
+                    <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+                {floatingToggle}
+            </>
         );
     }
 
     if (user.role === 'vendor') {
         return (
-            <Routes>
-                <Route path="/" element={<VendorDashboard />} />
-                <Route path="/update-supply" element={<UpdateSupply />} />
-                <Route path="/profile" element={<ProfilePage />} />
-                <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
+            <>
+                <Routes>
+                    <Route path="/" element={<VendorDashboard />} />
+                    <Route path="/update-supply" element={<UpdateSupply />} />
+                    <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+                {floatingToggle}
+            </>
         );
     }
 
     // recycler
     return (
-        <Routes>
-            <Route path="/" element={<RecyclerDashboard />} />
-            <Route path="/update-demand" element={<UpdateDemand />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        <>
+            <Routes>
+                <Route path="/" element={<RecyclerDashboard />} />
+                <Route path="/update-demand" element={<UpdateDemand />} />
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+            {floatingToggle}
+        </>
     );
 };
 
 const App = () => {
     return (
-        <BrowserRouter>
-            <AuthProvider>
-                <ToastProvider>
-                    <AppRoutes />
-                </ToastProvider>
-            </AuthProvider>
-        </BrowserRouter>
+        <ThemeProvider>
+            <BrowserRouter>
+                <AuthProvider>
+                    <ToastProvider>
+                        <AppRoutes />
+                    </ToastProvider>
+                </AuthProvider>
+            </BrowserRouter>
+        </ThemeProvider>
     );
 };
 

@@ -47,6 +47,64 @@
   --transition-spring: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+/* ===== Light Mode Variables ===== */
+[data-theme="light"] {
+  --bg: #F0F4F0;
+  --bg-card: rgba(255, 255, 255, 0.75);
+  --bg-card-solid: #ffffff;
+  --bg-elevated: rgba(240, 247, 240, 0.8);
+  --bg-input: rgba(255, 255, 255, 0.9);
+  --bg-glass: rgba(255, 255, 255, 0.55);
+  --text: #1A2E1A;
+  --text-secondary: #4A5E4A;
+  --text-muted: #8A9E8A;
+  --border: rgba(46, 125, 50, 0.1);
+  --border-light: rgba(46, 125, 50, 0.2);
+  --border-glow: rgba(46, 125, 50, 0.35);
+
+  --shadow-sm: 0 2px 8px rgba(46, 125, 50, 0.08);
+  --shadow-md: 0 4px 24px rgba(46, 125, 50, 0.12);
+  --shadow-lg: 0 8px 40px rgba(46, 125, 50, 0.15);
+  --shadow-glow-green: 0 0 30px rgba(46, 125, 50, 0.12), 0 0 60px rgba(46, 125, 50, 0.04);
+  --shadow-glow-blue: 0 0 30px rgba(21, 101, 192, 0.1), 0 0 60px rgba(21, 101, 192, 0.04);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb { background: rgba(46, 125, 50, 0.2); }
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover { background: rgba(46, 125, 50, 0.35); }
+
+[data-theme="light"] .animated-bg {
+  background: var(--bg);
+}
+
+[data-theme="light"] .animated-bg::before {
+  background: radial-gradient(circle, rgba(46, 125, 50, 0.10) 0%, transparent 70%);
+}
+
+[data-theme="light"] .animated-bg::after {
+  background: radial-gradient(circle, rgba(21, 101, 192, 0.07) 0%, transparent 70%);
+}
+
+[data-theme="light"] .auth-container::before {
+  background: radial-gradient(circle, rgba(46, 125, 50, 0.15) 0%, transparent 70%);
+}
+
+[data-theme="light"] .auth-container::after {
+  background: radial-gradient(circle, rgba(0, 200, 100, 0.08) 0%, transparent 70%);
+}
+
+[data-theme="light"] .auth-container {
+  background: var(--bg);
+}
+
+[data-theme="light"] .form-input:focus,
+[data-theme="light"] .form-select:focus {
+  background: rgba(255, 255, 255, 1);
+}
+
+[data-theme="light"] .dialog-overlay {
+  background: rgba(0, 0, 0, 0.35);
+}
+
 /* ===== Reset & Base ===== */
 *,
 *::before,
@@ -70,6 +128,25 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+/* ===== Theme Toggle Button ===== */
+.theme-toggle-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-toggle-btn svg {
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+}
+
+.theme-toggle-btn:hover svg {
+  transform: rotate(20deg) scale(1.15);
+}
+
+.theme-toggle-btn:active svg {
+  transform: rotate(180deg) scale(0.9);
 }
 
 #root {
@@ -985,6 +1062,38 @@ a:hover { color: var(--accent); }
   width: 3px;
   background: linear-gradient(180deg, var(--primary-light), var(--accent));
   border-radius: 4px;
+}
+
+/* ===== Theme FAB ===== */
+.theme-fab {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 9999;
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-full);
+  padding: 6px;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition);
+  animation: fab-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.theme-fab:hover {
+  box-shadow: var(--shadow-lg);
+  transform: scale(1.08);
+}
+
+.theme-fab .btn-icon {
+  color: var(--text-secondary) !important;
+  font-size: 1.05rem;
+  padding: 8px;
+}
+
+.theme-fab .btn-icon:hover {
+  color: var(--primary-light) !important;
 }
 
 /* ===== Responsive ===== */
