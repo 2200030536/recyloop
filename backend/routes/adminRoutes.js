@@ -4,7 +4,7 @@ const { protect } = require('../middleware/authMiddleware');
 const { authorize } = require('../middleware/roleMiddleware');
 const {
     getPendingVendors, approveVendor, createProduct, getProducts,
-    updateVendorRate, getVendorSupply, getRecyclerDemand, createRecycler,
+    getAllRates, updateVendorRate, getVendorSupply, getRecyclerDemand, createRecycler,
     createCityAdmin, getCityAdmins,
     createCity, getCities, deleteProduct, deleteCity, deleteVendorSupply,
     deleteRecyclerDemand, deleteUser, getUsers,
@@ -25,6 +25,7 @@ router.post('/product', createProduct);
 router.get('/products', getProducts);
 router.delete('/product/:id', deleteProduct);
 
+router.get('/rates', getAllRates);
 router.post('/rate/update', updateVendorRate);
 
 router.post('/city', createCity);

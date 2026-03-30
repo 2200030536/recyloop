@@ -36,7 +36,7 @@ const createProduct = async (req, res) => {
         const { name } = req.body;
         const productExists = await Product.findOne({ name });
         if (productExists) return res.status(400).json({ message: 'Product already exists' });
-        
+
         const product = await Product.create({ name });
         res.status(201).json(product);
     } catch (error) {
@@ -48,6 +48,15 @@ const getProducts = async (req, res) => {
     try {
         const products = await Product.find({});
         res.json(products);
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
+const getAllRates = async (req, res) => {
+    try {
+        const rates = await VendorRate.find({}).populate('product_id', 'name');
+        res.json(rates);
     } catch (error) {
         res.status(500).json({ message: 'Server Error' });
     }
@@ -134,7 +143,7 @@ const createCity = async (req, res) => {
         const { name } = req.body;
         const cityExists = await City.findOne({ name });
         if (cityExists) return res.status(400).json({ message: 'City already exists' });
-        
+
         const city = await City.create({ name });
         res.status(201).json(city);
     } catch (error) {
@@ -156,12 +165,12 @@ const getCities = async (req, res) => {
 const deleteProduct = async (req, res) => {
     try {
         const productId = req.params.id;
-        
+
         // Cascade delete related records
         await VendorRate.deleteMany({ product_id: productId });
         await VendorSupply.deleteMany({ product_id: productId });
         await RecyclerDemand.deleteMany({ product_id: productId });
-        
+
         // Delete the actual product
         await Product.findByIdAndDelete(productId);
         res.json({ message: 'Product and related records deleted' });
@@ -223,7 +232,7 @@ const updateVendorSupplyStatus = async (req, res) => {
             { ordersCompleted, status, updatedAt: Date.now() },
             { new: true }
         ).populate('vendor_id', 'name phone city').populate('product_id', 'name');
-        
+
         if (!supply) {
             return res.status(404).json({ message: 'Supply record not found' });
         }
@@ -253,7 +262,7 @@ const updateRecyclerDemandStatus = async (req, res) => {
 
 module.exports = {
     getPendingVendors, approveVendor, createProduct, getProducts,
-    updateVendorRate, getVendorSupply, getRecyclerDemand, createRecycler,
+    getAllRates, updateVendorRate, getVendorSupply, getRecyclerDemand, createRecycler,
     createCityAdmin, getCityAdmins,
     createCity, getCities, deleteProduct, deleteCity, deleteVendorSupply,
     deleteRecyclerDemand, deleteUser, getUsers, updateVendorSupplyStatus, updateRecyclerDemandStatus

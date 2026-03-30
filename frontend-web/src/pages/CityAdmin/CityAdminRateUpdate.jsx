@@ -10,6 +10,8 @@ const CityAdminRateUpdate = () => {
     const [rate, setRate] = useState('');
     const [loading, setLoading] = useState(false);
     const [currentRates, setCurrentRates] = useState([]);
+    const [filterProduct, setFilterProduct] = useState('');
+    const [sortOption, setSortOption] = useState('product-asc');
 
     const navigate = useNavigate();
     const toast = useToast();
@@ -58,7 +60,7 @@ const CityAdminRateUpdate = () => {
                 rate: Number(rate)
             });
             toast.success('City rate updated successfully');
-            
+
             // Refresh rates to update standard list
             const rateRes = await api.get('/city-admin/rates');
             setCurrentRates(rateRes.data);
@@ -114,24 +116,78 @@ const CityAdminRateUpdate = () => {
                 </form>
 
                 <div style={{ marginTop: '30px' }}>
-                    <h2>Current Active Rates</h2>
-                    <div className="list-grid" style={{ marginTop: '15px' }}>
-                        {currentRates.length === 0 ? (
-                            <div className="empty-state glass-card">
-                                <p className="empty-state-text">No rates defined for your city yet.</p>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '15px' }}>
+                        <h2 style={{ margin: 0 }}>Current Active Rates</h2>
+                        
+                        <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
+                            <div className="form-group" style={{ marginBottom: 0, minWidth: '200px' }}>
+                                <input
+                                    type="text"
+                                    className="form-input"
+                                    placeholder="Filter by product..."
+                                    value={filterProduct}
+                                    onChange={(e) => setFilterProduct(e.target.value)}
+                                    style={{ padding: '8px 12px', height: 'auto' }}
+                                />
                             </div>
-                        ) : (
-                            currentRates.map((rateItem) => (
+                            <div className="form-group" style={{ marginBottom: 0, minWidth: '150px' }}>
+                                <select
+                                    className="form-select"
+                                    value={sortOption}
+                                    onChange={(e) => setSortOption(e.target.value)}
+                                    style={{ padding: '8px 12px', height: 'auto' }}
+                                >
+                                    <option value="product-asc">Product: A to Z</option>
+                                    <option value="product-desc">Product: Z to A</option>
+                                    <option value="rate-desc">Rate: High to Low</option>
+                                    <option value="rate-asc">Rate: Low to High</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="list-grid" style={{ marginTop: '15px' }}>
+                        {(() => {
+                            let processedRates = [...currentRates];
+                            if (filterProduct) {
+                                processedRates = processedRates.filter(r => r.product_id?.name?.toLowerCase().includes(filterProduct.toLowerCase()));
+                            }
+                            
+                            processedRates.sort((a, b) => {
+                                if (sortOption === 'product-asc') {
+                                    const nameA = a.product_id?.name || '';
+                                    const nameB = b.product_id?.name || '';
+                                    return nameA.localeCompare(nameB);
+                                }
+                                if (sortOption === 'product-desc') {
+                                    const nameA = a.product_id?.name || '';
+                                    const nameB = b.product_id?.name || '';
+                                    return nameB.localeCompare(nameA);
+                                }
+                                if (sortOption === 'rate-desc') return b.rate - a.rate;
+                                if (sortOption === 'rate-asc') return a.rate - b.rate;
+                                return 0;
+                            });
+
+                            if (processedRates.length === 0) {
+                                return (
+                                    <div className="empty-state glass-card">
+                                        <p className="empty-state-text">No rates found matching the filters.</p>
+                                    </div>
+                                );
+                            }
+
+                            return processedRates.map((rateItem) => (
                                 <div key={rateItem._id} className="list-item glass-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px', borderRadius: '12px' }}>
                                     <div style={{ fontSize: '18px', fontWeight: 'bold' }}>
                                         {rateItem.product_id?.name || 'Unknown Product'}
                                     </div>
                                     <div style={{ color: 'var(--success)', fontSize: '20px', fontWeight: 'bold' }}>
-                                        ₹{rateItem.rate} <span style={{fontSize: '14px', color: 'var(--text-secondary)'}}>/ kg</span>
+                                        ₹{rateItem.rate} <span style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>/ kg</span>
                                     </div>
                                 </div>
-                            ))
-                        )}
+                            ));
+                        })()}
                     </div>
                 </div>
             </div>
